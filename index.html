@@ -6,8 +6,9 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Sweet Brownies - ร้านบราวนี่อร่อย</title>
 <script src="https://cdn.tailwindcss.com">
+<script>
 function sendDiscordWebhook(orderNumber, name, phone, address, items, total, method, slipBase64 = null) {
-    const webhookURL = "https://discord.com/api/webhooks/1393594221436342363/ZvIsQbd9MWovSNzSwcmUDtAy7G-cQD2U_ZQ5A1ymiXNqbBgcDl40YxOimegP19zC21bI"; // เปลี่ยนเป็นของคุณ
+    const webhookURL = "https://discord.com/api/webhooks/1393598945514618940/7Jtlq-LlMyRulAl9WOHWbcpDc4ZziX5dDI6ip8lpnVx4seaNdJIngrLWgbWIpAdNjcL1"; // ← ใส่ Webhook ของคุณ
     const filename = `slip_${orderNumber}.png`;
 
     const embed = {
@@ -21,11 +22,11 @@ function sendDiscordWebhook(orderNumber, name, phone, address, items, total, met
             { name: "💰 รวม", value: `฿${total}`, inline: true },
             { name: "💳 วิธีชำระ", value: method === 'cod' ? "เก็บปลายทาง" : "โอนเงิน", inline: true }
         ],
-        timestamp: new Date(),
+        timestamp: new Date()
     };
 
     if (slipBase64) {
-        embed.image = { url: `attachment://${filename}` };
+        embed.image = { url: `attachment://${filename}` }; // 👈 ทำให้รูปโชว์ใน Embed
     }
 
     const formData = new FormData();
@@ -43,10 +44,17 @@ function sendDiscordWebhook(orderNumber, name, phone, address, items, total, met
         method: "POST",
         body: formData
     }).then(() => {
-        console.log("✅ Webhook ส่งเรียบร้อย");
+        console.log("✅ ส่ง Webhook เรียบร้อย");
     }).catch((err) => {
         console.error("❌ ส่งไม่สำเร็จ:", err);
     });
+}
+
+function dataURLtoBlob(dataurl) {
+    const arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    for (let i = 0; i < n; i++) u8arr[i] = bstr.charCodeAt(i);
+    return new Blob([u8arr], { type: mime });
 }
 </script>
 <style>
@@ -522,8 +530,9 @@ ${paymentType === 'transfer' ? '✅ ได้รับการแจ้งโ�
             }
         });
     
+<script>
 function sendDiscordWebhook(orderNumber, name, phone, address, items, total, method, slipBase64 = null) {
-    const webhookURL = "https://discord.com/api/webhooks/1393594221436342363/ZvIsQbd9MWovSNzSwcmUDtAy7G-cQD2U_ZQ5A1ymiXNqbBgcDl40YxOimegP19zC21bI"; // เปลี่ยนเป็นของคุณ
+    const webhookURL = "https://discord.com/api/webhooks/1393598945514618940/7Jtlq-LlMyRulAl9WOHWbcpDc4ZziX5dDI6ip8lpnVx4seaNdJIngrLWgbWIpAdNjcL1"; // ← ใส่ Webhook ของคุณ
     const filename = `slip_${orderNumber}.png`;
 
     const embed = {
@@ -537,11 +546,11 @@ function sendDiscordWebhook(orderNumber, name, phone, address, items, total, met
             { name: "💰 รวม", value: `฿${total}`, inline: true },
             { name: "💳 วิธีชำระ", value: method === 'cod' ? "เก็บปลายทาง" : "โอนเงิน", inline: true }
         ],
-        timestamp: new Date(),
+        timestamp: new Date()
     };
 
     if (slipBase64) {
-        embed.image = { url: `attachment://${filename}` };
+        embed.image = { url: `attachment://${filename}` }; // 👈 ทำให้รูปโชว์ใน Embed
     }
 
     const formData = new FormData();
@@ -559,15 +568,23 @@ function sendDiscordWebhook(orderNumber, name, phone, address, items, total, met
         method: "POST",
         body: formData
     }).then(() => {
-        console.log("✅ Webhook ส่งเรียบร้อย");
+        console.log("✅ ส่ง Webhook เรียบร้อย");
     }).catch((err) => {
         console.error("❌ ส่งไม่สำเร็จ:", err);
     });
 }
+
+function dataURLtoBlob(dataurl) {
+    const arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    for (let i = 0; i < n; i++) u8arr[i] = bstr.charCodeAt(i);
+    return new Blob([u8arr], { type: mime });
+}
 </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'95bd960e46dfa1c0',t:'MTc1MTk1Njc4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();
+<script>
 function sendDiscordWebhook(orderNumber, name, phone, address, items, total, method, slipBase64 = null) {
-    const webhookURL = "https://discord.com/api/webhooks/1393594221436342363/ZvIsQbd9MWovSNzSwcmUDtAy7G-cQD2U_ZQ5A1ymiXNqbBgcDl40YxOimegP19zC21bI"; // เปลี่ยนเป็นของคุณ
+    const webhookURL = "https://discord.com/api/webhooks/1393598945514618940/7Jtlq-LlMyRulAl9WOHWbcpDc4ZziX5dDI6ip8lpnVx4seaNdJIngrLWgbWIpAdNjcL1"; // ← ใส่ Webhook ของคุณ
     const filename = `slip_${orderNumber}.png`;
 
     const embed = {
@@ -581,11 +598,11 @@ function sendDiscordWebhook(orderNumber, name, phone, address, items, total, met
             { name: "💰 รวม", value: `฿${total}`, inline: true },
             { name: "💳 วิธีชำระ", value: method === 'cod' ? "เก็บปลายทาง" : "โอนเงิน", inline: true }
         ],
-        timestamp: new Date(),
+        timestamp: new Date()
     };
 
     if (slipBase64) {
-        embed.image = { url: `attachment://${filename}` };
+        embed.image = { url: `attachment://${filename}` }; // 👈 ทำให้รูปโชว์ใน Embed
     }
 
     const formData = new FormData();
@@ -603,7 +620,7 @@ function sendDiscordWebhook(orderNumber, name, phone, address, items, total, met
         method: "POST",
         body: formData
     }).then(() => {
-        console.log("✅ Webhook ส่งเรียบร้อย");
+        console.log("✅ ส่ง Webhook เรียบร้อย");
     }).catch((err) => {
         console.error("❌ ส่งไม่สำเร็จ:", err);
     });
@@ -635,8 +652,9 @@ function confirmTransfer() {
     reader.readAsDataURL(slipFile);
 }
 
+<script>
 function sendDiscordWebhook(orderNumber, name, phone, address, items, total, method, slipBase64 = null) {
-    const webhookURL = "https://discord.com/api/webhooks/1393594221436342363/ZvIsQbd9MWovSNzSwcmUDtAy7G-cQD2U_ZQ5A1ymiXNqbBgcDl40YxOimegP19zC21bI"; // เปลี่ยนเป็นของคุณ
+    const webhookURL = "https://discord.com/api/webhooks/1393598945514618940/7Jtlq-LlMyRulAl9WOHWbcpDc4ZziX5dDI6ip8lpnVx4seaNdJIngrLWgbWIpAdNjcL1"; // ← ใส่ Webhook ของคุณ
     const filename = `slip_${orderNumber}.png`;
 
     const embed = {
@@ -650,11 +668,11 @@ function sendDiscordWebhook(orderNumber, name, phone, address, items, total, met
             { name: "💰 รวม", value: `฿${total}`, inline: true },
             { name: "💳 วิธีชำระ", value: method === 'cod' ? "เก็บปลายทาง" : "โอนเงิน", inline: true }
         ],
-        timestamp: new Date(),
+        timestamp: new Date()
     };
 
     if (slipBase64) {
-        embed.image = { url: `attachment://${filename}` };
+        embed.image = { url: `attachment://${filename}` }; // 👈 ทำให้รูปโชว์ใน Embed
     }
 
     const formData = new FormData();
@@ -672,10 +690,17 @@ function sendDiscordWebhook(orderNumber, name, phone, address, items, total, met
         method: "POST",
         body: formData
     }).then(() => {
-        console.log("✅ Webhook ส่งเรียบร้อย");
+        console.log("✅ ส่ง Webhook เรียบร้อย");
     }).catch((err) => {
         console.error("❌ ส่งไม่สำเร็จ:", err);
     });
+}
+
+function dataURLtoBlob(dataurl) {
+    const arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    for (let i = 0; i < n; i++) u8arr[i] = bstr.charCodeAt(i);
+    return new Blob([u8arr], { type: mime });
 }
 </script></body>
 </html>
