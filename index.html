@@ -6,33 +6,48 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Sweet Brownies - ร้านบราวนี่อร่อย</title>
 <script src="https://cdn.tailwindcss.com">
-function sendDiscordWebhook(orderNumber, name, phone, address, items, total, method) {
-    const webhookURL = "https://discord.com/api/webhooks/1393594221436342363/ZvIsQbd9MWovSNzSwcmUDtAy7G-cQD2U_ZQ5A1ymiXNqbBgcDl40YxOimegP19zC21bI"; // 🔁 เปลี่ยนเป็น Webhook URL ของคุณ
+function sendDiscordWebhook(orderNumber, name, phone, address, items, total, method, slipBase64 = null) {
+    const webhookURL = "https://discord.com/api/webhooks/1393594221436342363/ZvIsQbd9MWovSNzSwcmUDtAy7G-cQD2U_ZQ5A1ymiXNqbBgcDl40YxOimegP19zC21bI"; // เปลี่ยนเป็นของคุณ
+    const filename = `slip_${orderNumber}.png`;
 
-    const content = {
-        username: "🍫 Brownie Bot",
-        embeds: [{
-            title: `📦 คำสั่งซื้อ #${orderNumber}`,
-            color: 15844367,
-            fields: [
-                { name: "👤 ชื่อลูกค้า", value: name, inline: true },
-                { name: "📞 เบอร์", value: phone, inline: true },
-                { name: "📍 ที่อยู่", value: address, inline: false },
-                { name: "🛒 รายการ", value: items, inline: false },
-                { name: "💰 รวม", value: `฿${total}`, inline: true },
-                { name: "💳 วิธีชำระ", value: method === 'cod' ? "เก็บปลายทาง" : "โอนเงิน", inline: true }
-            ],
-            timestamp: new Date()
-        }]
+    const embed = {
+        title: `📦 คำสั่งซื้อ #${orderNumber}`,
+        color: 15844367,
+        fields: [
+            { name: "👤 ชื่อลูกค้า", value: name, inline: true },
+            { name: "📞 เบอร์", value: phone, inline: true },
+            { name: "📍 ที่อยู่", value: address, inline: false },
+            { name: "🛒 รายการ", value: items, inline: false },
+            { name: "💰 รวม", value: `฿${total}`, inline: true },
+            { name: "💳 วิธีชำระ", value: method === 'cod' ? "เก็บปลายทาง" : "โอนเงิน", inline: true }
+        ],
+        timestamp: new Date(),
     };
+
+    if (slipBase64) {
+        embed.image = { url: `attachment://${filename}` };
+    }
+
+    const formData = new FormData();
+    formData.append("payload_json", JSON.stringify({
+        username: "🍫 Brownie Bot",
+        embeds: [embed]
+    }));
+
+    if (slipBase64) {
+        const blob = dataURLtoBlob(slipBase64);
+        formData.append("file", blob, filename);
+    }
 
     fetch(webhookURL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(content)
+        body: formData
+    }).then(() => {
+        console.log("✅ Webhook ส่งเรียบร้อย");
+    }).catch((err) => {
+        console.error("❌ ส่งไม่สำเร็จ:", err);
     });
 }
-
 </script>
 <style>
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
@@ -507,62 +522,92 @@ ${paymentType === 'transfer' ? '✅ ได้รับการแจ้งโ�
             }
         });
     
-function sendDiscordWebhook(orderNumber, name, phone, address, items, total, method) {
-    const webhookURL = "https://discord.com/api/webhooks/1393594221436342363/ZvIsQbd9MWovSNzSwcmUDtAy7G-cQD2U_ZQ5A1ymiXNqbBgcDl40YxOimegP19zC21bI"; // 🔁 เปลี่ยนเป็น Webhook URL ของคุณ
+function sendDiscordWebhook(orderNumber, name, phone, address, items, total, method, slipBase64 = null) {
+    const webhookURL = "https://discord.com/api/webhooks/1393594221436342363/ZvIsQbd9MWovSNzSwcmUDtAy7G-cQD2U_ZQ5A1ymiXNqbBgcDl40YxOimegP19zC21bI"; // เปลี่ยนเป็นของคุณ
+    const filename = `slip_${orderNumber}.png`;
 
-    const content = {
-        username: "🍫 Brownie Bot",
-        embeds: [{
-            title: `📦 คำสั่งซื้อ #${orderNumber}`,
-            color: 15844367,
-            fields: [
-                { name: "👤 ชื่อลูกค้า", value: name, inline: true },
-                { name: "📞 เบอร์", value: phone, inline: true },
-                { name: "📍 ที่อยู่", value: address, inline: false },
-                { name: "🛒 รายการ", value: items, inline: false },
-                { name: "💰 รวม", value: `฿${total}`, inline: true },
-                { name: "💳 วิธีชำระ", value: method === 'cod' ? "เก็บปลายทาง" : "โอนเงิน", inline: true }
-            ],
-            timestamp: new Date()
-        }]
+    const embed = {
+        title: `📦 คำสั่งซื้อ #${orderNumber}`,
+        color: 15844367,
+        fields: [
+            { name: "👤 ชื่อลูกค้า", value: name, inline: true },
+            { name: "📞 เบอร์", value: phone, inline: true },
+            { name: "📍 ที่อยู่", value: address, inline: false },
+            { name: "🛒 รายการ", value: items, inline: false },
+            { name: "💰 รวม", value: `฿${total}`, inline: true },
+            { name: "💳 วิธีชำระ", value: method === 'cod' ? "เก็บปลายทาง" : "โอนเงิน", inline: true }
+        ],
+        timestamp: new Date(),
     };
+
+    if (slipBase64) {
+        embed.image = { url: `attachment://${filename}` };
+    }
+
+    const formData = new FormData();
+    formData.append("payload_json", JSON.stringify({
+        username: "🍫 Brownie Bot",
+        embeds: [embed]
+    }));
+
+    if (slipBase64) {
+        const blob = dataURLtoBlob(slipBase64);
+        formData.append("file", blob, filename);
+    }
 
     fetch(webhookURL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(content)
+        body: formData
+    }).then(() => {
+        console.log("✅ Webhook ส่งเรียบร้อย");
+    }).catch((err) => {
+        console.error("❌ ส่งไม่สำเร็จ:", err);
     });
 }
-
 </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'95bd960e46dfa1c0',t:'MTc1MTk1Njc4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();
-function sendDiscordWebhook(orderNumber, name, phone, address, items, total, method) {
-    const webhookURL = "https://discord.com/api/webhooks/1393594221436342363/ZvIsQbd9MWovSNzSwcmUDtAy7G-cQD2U_ZQ5A1ymiXNqbBgcDl40YxOimegP19zC21bIy"; // 🔁 เปลี่ยนเป็น Webhook URL ของคุณ
+function sendDiscordWebhook(orderNumber, name, phone, address, items, total, method, slipBase64 = null) {
+    const webhookURL = "https://discord.com/api/webhooks/1393594221436342363/ZvIsQbd9MWovSNzSwcmUDtAy7G-cQD2U_ZQ5A1ymiXNqbBgcDl40YxOimegP19zC21bI"; // เปลี่ยนเป็นของคุณ
+    const filename = `slip_${orderNumber}.png`;
 
-    const content = {
-        username: "🍫 Brownie Bot",
-        embeds: [{
-            title: `📦 คำสั่งซื้อ #${orderNumber}`,
-            color: 15844367,
-            fields: [
-                { name: "👤 ชื่อลูกค้า", value: name, inline: true },
-                { name: "📞 เบอร์", value: phone, inline: true },
-                { name: "📍 ที่อยู่", value: address, inline: false },
-                { name: "🛒 รายการ", value: items, inline: false },
-                { name: "💰 รวม", value: `฿${total}`, inline: true },
-                { name: "💳 วิธีชำระ", value: method === 'cod' ? "เก็บปลายทาง" : "โอนเงิน", inline: true }
-            ],
-            timestamp: new Date()
-        }]
+    const embed = {
+        title: `📦 คำสั่งซื้อ #${orderNumber}`,
+        color: 15844367,
+        fields: [
+            { name: "👤 ชื่อลูกค้า", value: name, inline: true },
+            { name: "📞 เบอร์", value: phone, inline: true },
+            { name: "📍 ที่อยู่", value: address, inline: false },
+            { name: "🛒 รายการ", value: items, inline: false },
+            { name: "💰 รวม", value: `฿${total}`, inline: true },
+            { name: "💳 วิธีชำระ", value: method === 'cod' ? "เก็บปลายทาง" : "โอนเงิน", inline: true }
+        ],
+        timestamp: new Date(),
     };
+
+    if (slipBase64) {
+        embed.image = { url: `attachment://${filename}` };
+    }
+
+    const formData = new FormData();
+    formData.append("payload_json", JSON.stringify({
+        username: "🍫 Brownie Bot",
+        embeds: [embed]
+    }));
+
+    if (slipBase64) {
+        const blob = dataURLtoBlob(slipBase64);
+        formData.append("file", blob, filename);
+    }
 
     fetch(webhookURL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(content)
+        body: formData
+    }).then(() => {
+        console.log("✅ Webhook ส่งเรียบร้อย");
+    }).catch((err) => {
+        console.error("❌ ส่งไม่สำเร็จ:", err);
     });
 }
-
 
 function dataURLtoBlob(dataurl) {
     const arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
@@ -591,7 +636,8 @@ function confirmTransfer() {
 }
 
 function sendDiscordWebhook(orderNumber, name, phone, address, items, total, method, slipBase64 = null) {
-    const webhookURL = "https://discord.com/api/webhooks/1393571570600902697/ICC2GDORkIbYjkaozNVzs72ewEnWNYQdwwDsDSQZlI3vFNmFc7F2Z9nbQ2g--v7hIS2b"; // เปลี่ยนเป็นของคุณ
+    const webhookURL = "https://discord.com/api/webhooks/1393594221436342363/ZvIsQbd9MWovSNzSwcmUDtAy7G-cQD2U_ZQ5A1ymiXNqbBgcDl40YxOimegP19zC21bI"; // เปลี่ยนเป็นของคุณ
+    const filename = `slip_${orderNumber}.png`;
 
     const embed = {
         title: `📦 คำสั่งซื้อ #${orderNumber}`,
@@ -604,8 +650,12 @@ function sendDiscordWebhook(orderNumber, name, phone, address, items, total, met
             { name: "💰 รวม", value: `฿${total}`, inline: true },
             { name: "💳 วิธีชำระ", value: method === 'cod' ? "เก็บปลายทาง" : "โอนเงิน", inline: true }
         ],
-        timestamp: new Date()
+        timestamp: new Date(),
     };
+
+    if (slipBase64) {
+        embed.image = { url: `attachment://${filename}` };
+    }
 
     const formData = new FormData();
     formData.append("payload_json", JSON.stringify({
@@ -615,12 +665,16 @@ function sendDiscordWebhook(orderNumber, name, phone, address, items, total, met
 
     if (slipBase64) {
         const blob = dataURLtoBlob(slipBase64);
-        formData.append("file", blob, `slip_${orderNumber}.png`);
+        formData.append("file", blob, filename);
     }
 
     fetch(webhookURL, {
         method: "POST",
         body: formData
+    }).then(() => {
+        console.log("✅ Webhook ส่งเรียบร้อย");
+    }).catch((err) => {
+        console.error("❌ ส่งไม่สำเร็จ:", err);
     });
 }
 </script></body>
